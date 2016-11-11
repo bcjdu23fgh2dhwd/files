@@ -5,51 +5,10 @@ namespace Interpro\Files\Http;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Interpro\Files\Exception\FilesException;
-use Interpro\Files\FieldProviding\FieldSaver;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Interpro\Files\Exception\FileSaveOperation;
 
 class FilesController extends Controller
 {
-    private $fSaver;
-
-    public function __construct(FieldSaver $fSaver)
-    {
-        $this->fSaver = $fSaver;
-    }
-
-    /**
-     * @param $entity_name
-     * @param $entity_id
-     * @param $name
-     * @param UploadedFile $uploadedFile
-     *
-     * @return string
-     */
-    public function fileSaveOperation($entity_name, $entity_id, $name, UploadedFile $uploadedFile)
-    {
-        $files_dir = public_path('files');
-
-        if (!is_writable($files_dir))
-        {
-            throw new FilesException('Дирректория для загрузки файлов ('.$files_dir.') не доступна для записи!');
-        }
-
-        $original_name = $uploadedFile->getClientOriginalName();
-
-        $link = $files_dir.'/'.$original_name;
-
-        $uploadedFile->move(
-            $files_dir,
-            $original_name
-        );
-
-        chmod($link, 0644);
-
-        $this->fSaver->save([['entity_name' => $entity_name, 'entity_id' => $entity_id, 'name' => $name, 'value' => $link]]);
-
-        return $link;
-    }
 
     public function upload(Request $request){
 
@@ -82,7 +41,9 @@ class FilesController extends Controller
                 $entity_id = 0;
             }
 
-            $link = $this->fileSaveOperation($entity_name, $entity_id, $field_name, $file);
+            $saveOper = new FileSaveOperation();
+
+            $link = $saveOper->fileSaveOperation($entity_name, $entity_id, $field_name, $file);
 
             return ['status'=>'OK', 'link' => $link];
         }
