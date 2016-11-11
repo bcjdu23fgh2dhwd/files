@@ -2,7 +2,7 @@
     "name": "interpro/files",
     "description": "Логика закачки и хранения файлов",
     "keywords": [
-        "imagelogic"
+        "files"
     ],
     "homepage": "https://github.com/intpro/files",
     "license": "MIT",
@@ -14,8 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
-        "intervention/image": "^2.2"
+        "php": ">=5.4"
     },
     "autoload": {
         "psr-4": {
