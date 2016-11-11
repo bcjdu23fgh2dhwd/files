@@ -1,6 +1,6 @@
 <?php
 
-namespace Interpro\ImageAgrTypes;
+namespace Interpro\Files;
 
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Support\Facades\App;
